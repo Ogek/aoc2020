@@ -1,4 +1,4 @@
-#![feature(str_split_once)]
+#![feature(iterator_fold_self, str_split_once)]
 
 pub mod day01;
 pub mod day02;

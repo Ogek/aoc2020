@@ -19,10 +19,8 @@ pub fn p2(input: &str) -> usize {
             group
                 .lines()
                 .map(line_to_answer_set)
-                // awaiting fold_first!
-                .fold(HashSet::from(('a'..='z').collect()), |acc, hs| {
-                    acc.intersection(&hs).cloned().collect()
-                })
+                .fold_first(|acc, hs| acc.intersection(&hs).cloned().collect())
+                .unwrap()
                 .len()
         })
         .sum()
