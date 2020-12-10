@@ -7,7 +7,6 @@ enum Instruction {
     Nop(isize),
 }
 
-#[derive(Debug, Eq, PartialEq)]
 enum ProgramError {
     InfiniteLoop,
 }
@@ -34,10 +33,7 @@ pub fn p2(input: &str) -> isize {
         .clone()
         .iter()
         .enumerate()
-        .filter(|(_, instruction)| match instruction {
-            Instruction::Jmp(_) | Instruction::Nop(_) => true,
-            _ => false,
-        })
+        .filter(|(_, instruction)| matches!(instruction, Instruction::Nop(_) | Instruction::Jmp(_)))
         .find_map(|(i, _)| {
             program[i] = swap_instructions(&program, i);
             let (res, bugged) = run(&program);
