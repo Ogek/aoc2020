@@ -1,27 +1,25 @@
 use itertools::Itertools;
 
 pub fn p1(input: &str) -> usize {
-    find_invalid(&parse(input), 25)
+    find_invalid(&parse(input), 25).unwrap()
 }
 
-fn find_invalid(data: &Vec<usize>, preamble_len: usize) -> usize {
-    data.windows(preamble_len + 1)
-        .find_map(|w| {
-            match w[0..=preamble_len]
-                .iter()
-                .tuple_combinations()
-                .any(|(n, m)| n + m == w[preamble_len])
-            {
-                true => None,
-                false => Some(w[preamble_len]),
-            }
-        })
-        .unwrap()
+fn find_invalid(data: &Vec<usize>, preamble_len: usize) -> Option<usize> {
+    data.windows(preamble_len + 1).find_map(|w| {
+        match w[0..=preamble_len]
+            .iter()
+            .tuple_combinations()
+            .any(|(n, m)| n + m == w[preamble_len])
+        {
+            true => None,
+            false => Some(w[preamble_len]),
+        }
+    })
 }
 
 pub fn p2(input: &str) -> usize {
     let data = parse(input);
-    let invalid = find_invalid(&data, 25);
+    let invalid = find_invalid(&data, 25).unwrap();
     (2..data.len())
         .find_map(|set_len| {
             data.windows(set_len)
@@ -46,7 +44,8 @@ fn test_resolve() {
                 309, 576,
             ],
             6
-        ),
+        )
+        .unwrap(),
         127
     );
 }
