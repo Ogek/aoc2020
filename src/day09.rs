@@ -10,8 +10,7 @@ fn find_invalid(data: &Vec<usize>, preamble_len: usize) -> usize {
             match w[0..=preamble_len]
                 .iter()
                 .tuple_combinations()
-                .map(|(n, m)| n + m)
-                .any(|sum| sum == w[preamble_len])
+                .any(|(n, m)| n + m == w[preamble_len])
             {
                 true => None,
                 false => Some(w[preamble_len]),
@@ -42,7 +41,7 @@ fn parse(input: &str) -> Vec<usize> {
 fn test_resolve() {
     assert_eq!(
         find_invalid(
-            vec![
+            &vec![
                 35, 20, 15, 25, 47, 40, 62, 55, 65, 95, 102, 117, 150, 182, 127, 219, 299, 277,
                 309, 576,
             ],
