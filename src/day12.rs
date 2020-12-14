@@ -28,7 +28,8 @@ impl Move {
 pub fn p1(input: &str) -> usize {
     let mut x = 0;
     let mut y = 0;
-    let mut direction = 90;
+    let mut dx = 1;
+    let mut dy = 0;
 
     for m in parse(input) {
         match m {
@@ -36,15 +37,24 @@ pub fn p1(input: &str) -> usize {
             Move::South(val) => y -= val,
             Move::Est(val) => x += val,
             Move::West(val) => x -= val,
-            Move::Forward(val) => match direction {
-                0 => y += val,
-                90 => x += val,
-                180 => y -= val,
-                270 => x -= val,
-                _ => unreachable!(),
-            },
-            Move::Right(val) => direction = (direction + val) % 360,
-            Move::Left(val) => direction = (360 - (val % 360) + direction) % 360,
+            Move::Forward(val) => {
+                x += dx * val;
+                y += dy * val;
+            }
+            Move::Right(val) => {
+                for _ in 0..val / 90 {
+                    let tmp = dx;
+                    dx = dy;
+                    dy = -tmp;
+                }
+            }
+            Move::Left(val) => {
+                for _ in 0..val / 90 {
+                    let tmp = dx;
+                    dx = -dy;
+                    dy = tmp;
+                }
+            }
         };
     }
 
