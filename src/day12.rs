@@ -55,8 +55,8 @@ fn rules_p1(state: State, m: Move) -> State {
         Move::Est(val) => State::new(state.x + val, state.y, state.dir),
         Move::West(val) => State::new(state.x - val, state.y, state.dir),
         Move::Forward(val) => {
-            let dir = direction(state.dir);
-            State::new(state.x + dir.0 * val, state.y + dir.1 * val, state.dir)
+            let (dx, dy) = direction(state.dir);
+            State::new(state.x + dx * val, state.y + dy * val, state.dir)
         }
         Move::Left(val) => State::new(state.x, state.y, (360 - val + state.dir) % 360),
         Move::Right(val) => State::new(state.x, state.y, (val + state.dir) % 360),
