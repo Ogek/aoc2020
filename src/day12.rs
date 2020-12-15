@@ -1,3 +1,16 @@
+#[derive(Debug, PartialEq, Eq)]
+struct State {
+    x: isize,
+    y: isize,
+    dir: isize,
+}
+
+impl State {
+    fn new(x: isize, y: isize, dir: isize) -> Self {
+        State { x, y, dir }
+    }
+}
+
 #[derive(Debug)]
 enum Move {
     North(isize),
@@ -23,6 +36,37 @@ impl Move {
             _ => unreachable!(),
         }
     }
+}
+
+fn direction(deg: isize) -> (isize, isize) {
+    match deg {
+        0 => (0, 1),
+        90 => (1, 0),
+        180 => (0, -1),
+        270 => (-1, 0),
+        _ => unreachable!(),
+    }
+}
+
+fn rules_p1(state: State, m: Move) -> State {
+    match m {
+        Move::North(val) => State::new(state.x, state.y + val, state.dir),
+        Move::South(val) => State::new(state.x, state.y - val, state.dir),
+        Move::Est(val) => State::new(state.x + val, state.y, state.dir),
+        Move::West(val) => State::new(state.x - val, state.y, state.dir),
+        Move::Forward(val) => {
+            let dir = direction(state.dir);
+            State::new(state.x + dir.0 * val, state.y + dir.1 * val, state.dir)
+        }
+        Move::Left(val) => State::new(state.x, state.y, (360 - val + state.dir) % 360),
+        Move::Right(val) => State::new(state.x, state.y, (val + state.dir) % 360),
+    }
+}
+
+pub fn p1_fp(input: &str) -> usize {
+    let state = parse(input).fold(State::new(0, 0, 90), rules_p1);
+
+    (state.x.abs() + state.y.abs()) as usize
 }
 
 pub fn p1(input: &str) -> usize {
@@ -104,6 +148,38 @@ fn parse<'a>(input: &'a str) -> impl Iterator<Item = Move> + 'a {
 #[test]
 fn test_p1() {
     assert_eq!(p1(include_str!("../inputs/day12.txt")), 845);
+}
+
+#[test]
+fn test_p1_fp() {
+    assert_eq!(p1_fp(include_str!("../inputs/day12.txt")), 845);
+}
+
+#[test]
+fn test_moves() {
+    assert_eq!(
+        vec![Move::Forward(10)]
+            .into_iter()
+            .take(1)
+            .fold(State::new(0, 0, 90), rules_p1),
+        State::new(10, 0, 90)
+    );
+
+    assert_eq!(
+        vec![Move::Forward(10), Move::Right(90)]
+            .into_iter()
+            .take(2)
+            .fold(State::new(0, 0, 90), rules_p1),
+        State::new(10, 0, 180)
+    );
+
+    assert_eq!(
+        vec![Move::Forward(10), Move::Right(90), Move::West(50)]
+            .into_iter()
+            .take(3)
+            .fold(State::new(0, 0, 90), rules_p1),
+        State::new(-40, 0, 180)
+    );
 }
 
 #[test]
