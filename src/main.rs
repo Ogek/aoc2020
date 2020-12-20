@@ -1,6 +1,6 @@
 fn main() {
     println!(
         "Solution: {}",
-        aoc2020::day13::p2(include_str!("../inputs/day13.txt"))
+        aoc2020::day14::p1(include_str!("../inputs/day14.txt"))
     );
 }
